@@ -11,6 +11,10 @@ const modalLightboxGallery = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
+window.addEventListener('load', () => {
+  console.log('All resources finished loading!');
+});
+
 refs.btnLoadMore.classList.add('is-hidden');
 
 const pixaby = new PixabayAPI();
@@ -31,7 +35,8 @@ const loadMorePhotos = async function (entries, observer) {
         const { hits } = await pixaby.getPhotos();
         const markup = createMarkup(hits);
         refs.gallery.insertAdjacentHTML('beforeend', markup);
-        if (pixaby.hasMorePhotos) {
+
+        if (pixaby.hasMorePhotos()) {
           const lastItem = document.querySelector('.gallery a:last-child');
           observer.observe(lastItem);
         } else
@@ -92,7 +97,7 @@ const onSubmitClick = async event => {
     pixaby.setTotal(total);
     Notify.success(`Hooray! We found ${total} images.`, notifyInit);
 
-    if (pixaby.hasMorePhotos) {
+    if (pixaby.hasMorePhotos()) {
       const lastItem = document.querySelector('.gallery a:last-child');
       observer.observe(lastItem);
     }
@@ -109,7 +114,7 @@ const onSubmitClick = async event => {
 const onLoadMore = async () => {
   pixaby.incrementPage();
 
-  if (!pixaby.hasMorePhotos) {
+  if (!pixaby.hasMorePhotos()) {
     refs.btnLoadMore.classList.add('is-hidden');
     Notify.info("We're sorry, but you've reached the end of search results.");
     notifyInit;
@@ -136,7 +141,6 @@ function clearPage() {
 refs.form.addEventListener('submit', onSubmitClick);
 refs.btnLoadMore.addEventListener('click', onLoadMore);
 
-//  smooth scrolling
 function scrollPage() {
   const { height: cardHeight } = document
     .querySelector('.photo-gallery')

@@ -7,7 +7,7 @@ export class PixabayAPI {
   #page = 1;
   #per_page = 40;
   #query = '';
-  #totalPages = 0;
+  #totalImages = 0;
 
   async getPhotos() {
     const params = {
@@ -41,10 +41,10 @@ export class PixabayAPI {
   }
 
   setTotal(total) {
-    this.#totalPages = total;
+    this.#totalImages = total;
   }
 
   hasMorePhotos() {
-    return this.#page < Math.ceil(this.#totalPages / this.#per_page);
+    return this.#page < Math.ceil(this.#totalImages / this.#per_page);
   }
 }
